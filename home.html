@@ -1,0 +1,16 @@
+<body>
+    <button id="teacher">I am a Teacher</button>
+    <button id="student">I am a Student</button>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+<script>
+    const log = console.log.bind(console);
+    log("%cSocket.io Boilerplate", "color:blue; font-size:50px");
+
+    document.getElementById('student').addEventListener('click', () => {
+        window.location.href = 'student';
+    });
+    document.getElementById('teacher').addEventListener('click', () => {
+        window.location.href = 'teacher';
+    });
+</script>
