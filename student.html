@@ -24,6 +24,9 @@
     socket.on('disconnect', () => {
         document.getElementById('foo').innerHTML = 'Server Status: 🔴';
     });
+    socket.on('roomConnect', () => {
+        document.getElementById('roomStatus').innerHTML = '';
+    });
     socket.on('roomError', () => {
         document.getElementById('roomStatus').innerHTML = 'That room does not exist, Please try again or fresh the browser..';
     });

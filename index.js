@@ -30,6 +30,7 @@ io.on('connection', (socket) => {
             };
 
             socket.join(args.room.id);
+            socket.emit('roomConnect');
             log('Student Joined Room!');
         }
         else if (args.user.userType == 'student' && !__roomStruct__[args.room.roomCode]) {
