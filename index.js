@@ -81,6 +81,10 @@ app.get('/student', (req, res) => {
     res.sendFile(path.join(__dirname, '/student.html'));
 });
 
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, '/admin.html'));
+});
+
 app.get('*', (req, res) => {
     res.send('Error 404: How did we get here?');
 });

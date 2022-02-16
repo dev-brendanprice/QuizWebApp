@@ -1,0 +1,29 @@
+<head>
+    <title>Socket.io Boilerplate</title>
+</head>
+
+<body>
+    <div id="adminAuth">
+        <form id="frm1" action="" onkeydown="return event.key != 'Enter';">
+            pass: <input id="pswd" type="text" name="pswd" value=""><br>
+        </form>
+        <button id="btn">enter</button>
+    </div>
+    <div id="adminContent" style="display: none;">
+        admin control panel
+    </div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+<script>
+    const log = console.log.bind(console);
+    log("%cSocket.io Boilerplate", "color:blue; font-size:50px");
+
+    document.getElementById('btn').addEventListener('click', () => {
+        // lmao
+        if (document.getElementById('pswd').value == 'admin') {
+            document.getElementById('adminAuth').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'inline-block';
+        };
+    });
+</script>
