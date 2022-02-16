@@ -20,7 +20,6 @@ var __userStruct__ = {},
 
 io.on('connection', (socket) => {
 
-    log('user connected');
     var stats = JSON.parse(fs.readFileSync(path.join(__dirname, 'fstat.json')));
     stats.loggedUsers = stats.loggedUsers + 1;
     fs.writeFileSync(path.join(__dirname, 'fstat.json'), JSON.stringify(stats, null, 2));
@@ -47,12 +46,12 @@ io.on('connection', (socket) => {
             __roomStruct__[args.room.id] =
             {
                 inception: { time: new Date() },
-                room:      { roomCode: args.room.roomCode, roomName: args.room.rommName }
+                room:      { roomCode: args.room.id, roomName: args.room.roomName }
             };
             __userStruct__[socket.id] = 
             {
                 user: { userType: args.user.userType, isTeacher: true },
-                room: { roomCode: args.room.roomCode }
+                room: { roomCode: args.room.id }
             };
 
             socket.join(args.room.id);
@@ -66,7 +65,7 @@ io.on('connection', (socket) => {
 
     socket.on('nickListener', (args) => {
         __userStruct__[socket.id].user['userNickname'] = args.nick;
-        log(__userStruct__[socket.id]);
+        // log(__userStruct__[socket.id]);
     });
 
     socket.on('roomEvent', (args) => {
@@ -88,7 +87,25 @@ io.on('connection', (socket) => {
     });
 
     socket.on('dev', (bruh) => {
-        log(bruh);
+        log(__userStruct__);
+        log(__roomStruct__);
+        
+        // format of structures
+        // __userStruct__ @global variable
+        // {
+        //     <socket.id>: {
+        //         user: { userType: 'student/teacher', isTeacher: true/false, userNickname: '<userNickname>' },
+        //         room: { roomCode: '<roomCode>'}
+        //     }
+        // }
+
+        // __roomStruct__ @global variable
+        // {
+        //     <roomCode>: {
+        //         inception: { time: '<time>' },
+        //         room: { roomCode: '<roomCode>', roomName: '<roomName' }
+        //     }
+        // }
     });
 });
 
