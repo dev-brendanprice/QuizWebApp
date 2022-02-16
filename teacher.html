@@ -6,7 +6,8 @@
     <form id="frm1" onkeydown="return event.key != 'Enter';">
         Room Name: <input id="nameField" type="text" name="roomName" value=""><br>
     </form>
-    <button id="btn">Create Room</button>
+    <button id="createRoomBtn">Create Room</button>
+    <button id="eventBtn">test</button>
 
     <div id="roomCodeDisplay"></div>
     <div id="entryStatus" style="display:none;"></div>
@@ -18,6 +19,9 @@
     const log = console.log.bind(console);
     const socket = io('http://86.2.10.33:3221/');
     log("%cSocket.io Boilerplate", "color:blue; font-size:50px");
+
+    // await for assignment
+    var roomId;
 
     // Func to generate roomCode
     var makeRoomId = (len) => {
@@ -38,13 +42,14 @@
         document.getElementById('foo').innerHTML = 'Server Status: 🔴';
     });
 
-    document.getElementById('btn').addEventListener('click', () => {
+    document.getElementById('createRoomBtn').addEventListener('click', () => {
 
+        roomId = makeRoomId(6);
         var fName = document.getElementById('nameField').value;
         if (fName) {
             var roomName = document.getElementById('nameField').value;
             var room = {
-                roomName: roomName, id: makeRoomId(6)
+                roomName: roomName, id: roomId
             };
             var user = {
                 userType: 'teacher'
@@ -55,6 +60,10 @@
             document.getElementById('entryStatus').innerHTML = 'Please enter a room name';
             document.getElementById('entryStatus').style.display = 'inline-block';
         };
+    });
 
+    document.getElementById('eventBtn').addEventListener('click', () => {
+
+        socket.emit('roomEvent', {roomId});
     });
 </script>

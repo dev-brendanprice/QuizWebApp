@@ -69,6 +69,11 @@ io.on('connection', (socket) => {
         log(__userStruct__[socket.id]);
     });
 
+    socket.on('roomEvent', (args) => {
+        log(args.roomId)
+        io.to(args.roomId).emit('roomEvent');
+    });
+
     socket.on('disconnect', () => {
 
         // This works somehow lmfao, If client disconnects remove all references (RAM efficient)

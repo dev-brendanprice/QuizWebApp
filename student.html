@@ -17,7 +17,7 @@
         
         Choose your nickname
         <form id="inputForm2" onkeydown="return event.key != 'Enter';">
-            Room Code: <input id="nick" onclick="return false" type="text" name="nickInput" value=""><br>
+            nickname: <input id="nick" onclick="return false" type="text" name="nickInput" value=""><br>
         </form>
         <button id="nickEnterBtn">Enter</button>
     
@@ -47,6 +47,10 @@
     });
     socket.on('roomError', () => {
         document.getElementById('roomStatus').innerHTML = 'That room does not exist, Please try again or fresh the browser..';
+    });
+
+    socket.on('roomEvent', () => {
+        console.log('hu');
     });
 
     document.getElementById('enterBtn').addEventListener('click', () => {
