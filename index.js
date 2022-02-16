@@ -1,15 +1,16 @@
 const express = require('express'),
-    res = require('express/lib/response'),
-    { createServer } = require('http'),
-    { Server } = require('socket.io'),
-    path = require('path'),
-    { SocketAddress } = require('net');
+res = require('express/lib/response'),
+{ createServer } = require('http'),
+{ Server } = require('socket.io'),
+path = require('path'),
+fs = require('fs'),
+{ SocketAddress } = require('net');
 const log = console.log.bind(console);
 
 const app = express(),
-    httpServer = createServer(app),
-    port = 3221,
-    io = new Server(httpServer, {});
+httpServer = createServer(app),
+port = 3221,
+io = new Server(httpServer, {});
 log(`- http://86.2.10.33:${port}/`);
 
 // Objects to store users & rooms
@@ -18,6 +19,10 @@ var __userStruct__ = {},
 
 
 io.on('connection', (socket) => {
+    
+    var stats = JSON.parse(fs.readFileSync(path.join(__dirname, 'fstat.json')));
+    stats.loggedUsers = stats.loggedUsers + 1;
+    fs.writeFileSync(path.join(__dirname, 'fstat.json'), JSON.stringify(stats, null, 2));
 
     socket.on('roomListener', (args) => {
 
@@ -51,10 +56,15 @@ io.on('connection', (socket) => {
 
             socket.join(args.room.id);
             log('Teacher Created Room!');
+
+            var stats = JSON.parse(fs.readFileSync(path.join(__dirname, 'fstat.json')));
+            stats.loggedRooms = stats.loggedRooms + 1;
+            fs.writeFileSync(path.join(__dirname, 'fstat.json'), JSON.stringify(stats, null, 2));
         };
     });
 
     socket.on('disconnect', () => {
+
         // This works somehow lmfao, If client disconnects remove all references (RAM efficient)
         if (__userStruct__[socket.id]) {
             let roomCode = __userStruct__[socket.id].room.roomCode;
