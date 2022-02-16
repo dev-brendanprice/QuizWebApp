@@ -8,13 +8,17 @@
     </form>
     <button id="btn">Join Room</button>
 
+    <div id="roomStatus"></div>
     <div id="foo">Server Status: 🔴</div>
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
 <script>
     const log = console.log.bind(console);
-    const socket = io('http://86.2.10.33:3221/');
+    var socket;
+    try {
+        socket = io('http://86.2.10.33:3221/');
+    } catch (err) {};
     log("%cSocket.io Boilerplate", "color:blue; font-size:50px");
 
     socket.on('connect', () => {
@@ -22,6 +26,9 @@
     });
     socket.on('disconnect', () => {
         document.getElementById('foo').innerHTML = 'Server Status: 🔴';
+    });
+    socket.on('roomError', () => {
+        document.getElementById('roomStatus').innerHTML = 'That room does not exist, Please try again or fresh the browser..';
     });
 
     document.getElementById('btn').addEventListener('click', () => {

@@ -2,7 +2,8 @@ const express = require('express'),
     res = require('express/lib/response'),
     { createServer } = require('http'),
     { Server } = require('socket.io'),
-    path = require('path');
+    path = require('path'),
+    { SocketAddress } = require('net');
 const log = console.log.bind(console);
 
 const app = express(),
@@ -30,6 +31,10 @@ io.on('connection', (socket) => {
 
             socket.join(args.room.id);
             log('Student Joined Room!');
+        }
+        else if (args.user.userType == 'student' && !__roomStruct__[args.room.roomCode]) {
+            // Room does not exist
+            socket.emit('roomError');
         }
         else if (args.user.userType == 'teacher' && !__roomStruct__[args.room.id]) {
             __roomStruct__[args.room.id] =
