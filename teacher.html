@@ -15,10 +15,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
 <script>
     const log = console.log.bind(console);
-    var socket;
-    try {
-        socket = io('http://86.2.10.33:3221/');
-    } catch (err) {};
+    const socket = io('http://86.2.10.33:3221/');
     log("%cSocket.io Boilerplate", "color:blue; font-size:50px");
 
     // Func to generate roomCode
