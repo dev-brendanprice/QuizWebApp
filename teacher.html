@@ -1,19 +1,21 @@
 <body>
-
-    <form id="frm1" action="">
+    <form id="frm1" action="" onkeydown="return event.key != 'Enter';">
         Room Name: <input id="nameField" type="text" name="roomName" value=""><br>
     </form>
     <button id="btn">Create Room</button>
 
+    <div id="roomCodeDisplay"></div>
+
     <div id="foo">Server Status: 🔴</div>
 </body>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
 <script>
     const log = console.log.bind(console);
     const socket = io('http://86.2.10.33:3221/');
     log("%cSocket.io Boilerplate", "color:blue; font-size:50px");
 
-    // Function to randomly generate code for room
+    // Func to generate roomCode
     var makeRoomId = (len) => {
         var result = '';
         var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -21,6 +23,7 @@
         for ( var i=0; i<len; i++ ) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         };
+        document.getElementById('roomCodeDisplay').innerHTML = result;
         return result;
     };
 
@@ -39,6 +42,6 @@
         var user = {
             userType: 'teacher'
         };
-        socket.emit('createRoom', {room, user});
+        socket.emit('roomListener', {room, user});
     });
 </script>

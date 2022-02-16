@@ -1,12 +1,12 @@
 <body>
-
-    <form id="frm1" action="">
-        Room Code: <input type="text" name="roomCode" value=""><br>
+    <form id="frm1" action="" onkeydown="return event.key != 'Enter';">
+        Room Code: <input id="roomCode" type="text" name="roomCode" value=""><br>
     </form>
     <button id="btn">Join Room</button>
 
     <div id="foo">Server Status: 🔴</div>
 </body>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
 <script>
     const log = console.log.bind(console);
@@ -28,6 +28,6 @@
         var user = {
             userType: 'student'
         };
-        socket.emit('joinRoom', {room, user});
+        socket.emit('roomListener', {room, user});
     });
 </script>
