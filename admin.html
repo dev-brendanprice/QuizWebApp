@@ -21,7 +21,7 @@
 
     document.getElementById('btn').addEventListener('click', () => {
         // lmao
-        if (document.getElementById('pswd').value == 'admin') {
+        if (document.getElementById('pswd').value == atob("YWRtaW4=")) {
             document.getElementById('adminAuth').style.display = 'none';
             document.getElementById('adminContent').style.display = 'inline-block';
         };
