@@ -64,6 +64,11 @@ io.on('connection', (socket) => {
         };
     });
 
+    socket.on('nickListener', (args) => {
+        __userStruct__[socket.id].user['userNickname'] = args.nick;
+        log(__userStruct__[socket.id]);
+    });
+
     socket.on('disconnect', () => {
 
         // This works somehow lmfao, If client disconnects remove all references (RAM efficient)

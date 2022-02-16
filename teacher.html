@@ -3,12 +3,13 @@
 </head>
 
 <body>
-    <form id="frm1" action="" onkeydown="return event.key != 'Enter';">
+    <form id="frm1" onkeydown="return event.key != 'Enter';">
         Room Name: <input id="nameField" type="text" name="roomName" value=""><br>
     </form>
     <button id="btn">Create Room</button>
 
     <div id="roomCodeDisplay"></div>
+    <div id="entryStatus" style="display:none;"></div>
     <div id="foo">Server Status: 🔴</div>
 </body>
 
@@ -38,13 +39,22 @@
     });
 
     document.getElementById('btn').addEventListener('click', () => {
-        var roomName = document.getElementById('nameField').value;
-        var room = {
-            roomName: roomName, id: makeRoomId(6)
+
+        var fName = document.getElementById('nameField').value;
+        if (fName) {
+            var roomName = document.getElementById('nameField').value;
+            var room = {
+                roomName: roomName, id: makeRoomId(6)
+            };
+            var user = {
+                userType: 'teacher'
+            };
+            socket.emit('roomListener', {room, user});
+            document.getElementById('entryStatus').style.display = 'none';
+        } else if (!fName) {
+            document.getElementById('entryStatus').innerHTML = 'Please enter a room name';
+            document.getElementById('entryStatus').style.display = 'inline-block';
         };
-        var user = {
-            userType: 'teacher'
-        };
-        socket.emit('roomListener', {room, user});
+
     });
 </script>

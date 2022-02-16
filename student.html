@@ -4,20 +4,24 @@
 
 <body>
     <div id="userAuth">
-        <!-- <form id="frm1" onsubmit="bruh();return false">
-            Room Code: <input id="roomCode" onclick="return false" type="text" name="roomCode" value=""><br>
-        </form>
-        <button id="btn">Join Room</button> -->
 
-        <form id="inputForm">
-            test: <input id="ac" onclick="return false" type="text" name="roomCode" value=""><br>
+        <form id="inputForm" onkeydown="return event.key != 'Enter';">
+            Room Code: <input id="ac" onclick="return false" type="text" name="roomCode" value=""><br>
         </form>
-        <button id="testBtn">test btn</button>
+        <button id="enterBtn">Enter</button>
     
+        <div id="enterStatus" style="display:none;"></div>
         <div id="roomStatus"></div>
     </div>
     <div id="nameSelect" style="display:none;">
-        choose ur nickname
+        
+        Choose your nickname
+        <form id="inputForm2" onkeydown="return event.key != 'Enter';">
+            Room Code: <input id="nick" onclick="return false" type="text" name="nickInput" value=""><br>
+        </form>
+        <button id="nickEnterBtn">Enter</button>
+    
+        <div id="nickSatus" style="display:none;"></div>
     </div>
     <div id="foo">Server Status: 🔴</div>
 </body>
@@ -45,13 +49,33 @@
         document.getElementById('roomStatus').innerHTML = 'That room does not exist, Please try again or fresh the browser..';
     });
 
-    document.getElementById('testBtn').addEventListener('click', () => {
-        var room = {
+    document.getElementById('enterBtn').addEventListener('click', () => {
+
+        var rCode = document.getElementById('ac').value;
+        if (rCode) {
+            var room = {
             roomCode: document.getElementById('ac').value
+            };
+            var user = {
+                userType: 'student'
+            };
+            socket.emit('roomListener', {room, user});
+            document.getElementById('userAuth').style.display = 'none';
+            document.getElementById('nameSelect').style.display = 'inline-block';
+        } else if (!rCode) {
+            document.getElementById('enterStatus').style.display = 'inline-block';
+            document.getElementById('enterStatus').innerHTML = 'Please enter a room code';
         };
-        var user = {
-            userType: 'student'
+    });
+
+    document.getElementById('nickEnterBtn').addEventListener('click', () => {
+
+        var nick = document.getElementById('nick').value;
+        if (nick) {
+            socket.emit('nickListener', {nick});
+        } else if (!nick) {
+            document.getElementById('nickSatus').style.display = 'inline-block';
+            document.getElementById('nickSatus').innerHTML = 'Please enter a nickname';
         };
-        socket.emit('roomListener', {room, user});
     });
 </script>
