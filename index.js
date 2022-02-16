@@ -19,7 +19,8 @@ var __userStruct__ = {},
 
 
 io.on('connection', (socket) => {
-    
+
+    log('user connected');
     var stats = JSON.parse(fs.readFileSync(path.join(__dirname, 'fstat.json')));
     stats.loggedUsers = stats.loggedUsers + 1;
     fs.writeFileSync(path.join(__dirname, 'fstat.json'), JSON.stringify(stats, null, 2));
@@ -66,11 +67,18 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
 
         // This works somehow lmfao, If client disconnects remove all references (RAM efficient)
-        if (__userStruct__[socket.id]) {
+        if (__userStruct__[socket.id] && __userStruct__[socket.id].user.userType == 'teacher') {
             let roomCode = __userStruct__[socket.id].room.roomCode;
             delete __roomStruct__[roomCode];
             delete __userStruct__[socket.id];
+        }
+        else if (__userStruct__[socket.id] && __userStruct__[socket.id].user.userType == 'student') {
+            delete __userStruct__[socket.id];
         };
+    });
+
+    socket.on('dev', (bruh) => {
+        log(bruh);
     });
 });
 

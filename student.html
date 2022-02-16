@@ -3,12 +3,22 @@
 </head>
 
 <body>
-    <form id="frm1" action="" onkeydown="return event.key != 'Enter';">
-        Room Code: <input id="roomCode" type="text" name="roomCode" value=""><br>
-    </form>
-    <button id="btn">Join Room</button>
+    <div id="userAuth">
+        <!-- <form id="frm1" onsubmit="bruh();return false">
+            Room Code: <input id="roomCode" onclick="return false" type="text" name="roomCode" value=""><br>
+        </form>
+        <button id="btn">Join Room</button> -->
 
-    <div id="roomStatus"></div>
+        <form id="inputForm">
+            test: <input id="ac" onclick="return false" type="text" name="roomCode" value=""><br>
+        </form>
+        <button id="testBtn">test btn</button>
+    
+        <div id="roomStatus"></div>
+    </div>
+    <div id="nameSelect" style="display:none;">
+        choose ur nickname
+    </div>
     <div id="foo">Server Status: 🔴</div>
 </body>
 
@@ -18,6 +28,9 @@
     const socket = io('http://86.2.10.33:3221/');
     log("%cSocket.io Boilerplate", "color:blue; font-size:50px");
 
+    // await for assignment
+    var roomCode;
+
     socket.on('connect', () => {
         document.getElementById('foo').innerHTML = 'Server Status: ✅';
     });
@@ -25,16 +38,16 @@
         document.getElementById('foo').innerHTML = 'Server Status: 🔴';
     });
     socket.on('roomConnect', () => {
+        // window.location.href = window.location.href + `?code=${roomCode}`;
         document.getElementById('roomStatus').innerHTML = '';
     });
     socket.on('roomError', () => {
         document.getElementById('roomStatus').innerHTML = 'That room does not exist, Please try again or fresh the browser..';
     });
 
-    document.getElementById('btn').addEventListener('click', () => {
-        var roomCode = document.getElementById('roomCode').value;
+    document.getElementById('testBtn').addEventListener('click', () => {
         var room = {
-            roomCode: roomCode
+            roomCode: document.getElementById('ac').value
         };
         var user = {
             userType: 'student'
