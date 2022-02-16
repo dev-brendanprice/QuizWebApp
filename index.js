@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
         // Check for userType & config rooms
         if (args.user.userType == 'student' && __roomStruct__[args.room.roomCode]) {
             __userStruct__[socket.id] = 
-            { 
+            {
                 user: { userType: args.user.userType, isTeacher: false },
                 room: { roomCode: args.room.roomCode }
             };
