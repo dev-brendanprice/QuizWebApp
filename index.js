@@ -1,10 +1,10 @@
 const express = require('express'),
-res = require('express/lib/response'),
-{ createServer } = require('http'),
-{ Server } = require('socket.io'),
-path = require('path'),
-fs = require('fs'),
-{ SocketAddress } = require('net');
+    res = require('express/lib/response'),
+    { createServer } = require('http'),
+    { Server } = require('socket.io'),
+    path = require('path'),
+    fs = require('fs'),
+    { SocketAddress } = require('net');
 const log = console.log.bind(console);
 
 const app = express(),
@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
                 room: { roomCode: args.room.roomCode }
             };
 
-            socket.join(args.room.id);
+            socket.join(args.room.roomCode);
             socket.emit('roomConnect');
             log('Student Joined Room!');
         }
@@ -46,12 +46,14 @@ io.on('connection', (socket) => {
             __roomStruct__[args.room.id] =
             {
                 inception: { time: new Date() },
-                room:      { roomCode: args.room.id, roomName: args.room.roomName }
+                room:      { roomCode: args.room.id, roomName: args.room.roomName },
+                instance:  { qNum: 0, users: 0 }
             };
             __userStruct__[socket.id] = 
             {
                 user: { userType: args.user.userType, isTeacher: true },
-                room: { roomCode: args.room.id }
+                room: { roomCode: args.room.id },
+                data: { pts: 0 }
             };
 
             socket.join(args.room.id);
@@ -64,26 +66,14 @@ io.on('connection', (socket) => {
     });
 
     socket.on('nickListener', (args) => {
-        __userStruct__[socket.id].user['userNickname'] = args.nick;
-        // log(__userStruct__[socket.id]);
+        __userStruct__[socket.id].user['userNickname'] = args.nickname;
     });
 
     socket.on('roomEvent', (args) => {
-        log(args.roomId)
-        io.to(args.roomId).emit('roomEvent');
-    });
+        var questions = JSON.parse(fs.readFileSync(path.join(__dirname, 'json/questions.json'))),
+            answers   = JSON.parse(fs.readFileSync(path.join(__dirname, 'json/answers.json')));
 
-    socket.on('disconnect', () => {
-
-        // This works somehow lmfao, If client disconnects remove all references (RAM efficient)
-        if (__userStruct__[socket.id] && __userStruct__[socket.id].user.userType == 'teacher') {
-            let roomCode = __userStruct__[socket.id].room.roomCode;
-            delete __roomStruct__[roomCode];
-            delete __userStruct__[socket.id];
-        }
-        else if (__userStruct__[socket.id] && __userStruct__[socket.id].user.userType == 'student') {
-            delete __userStruct__[socket.id];
-        };
+        io.to(args.room.id).emit('roomEvent', {questions, answers});
     });
 
     socket.on('dev', (bruh) => {
@@ -107,6 +97,19 @@ io.on('connection', (socket) => {
         //     }
         // }
     });
+
+    socket.on('disconnect', () => {
+
+        // This works somehow lmfao, If client disconnects remove all references (RAM efficient)
+        if (__userStruct__[socket.id] && __userStruct__[socket.id].user.userType == 'teacher') {
+            let roomCode = __userStruct__[socket.id].room.roomCode;
+            delete __roomStruct__[roomCode];
+            delete __userStruct__[socket.id];
+        }
+        else if (__userStruct__[socket.id] && __userStruct__[socket.id].user.userType == 'student') {
+            delete __userStruct__[socket.id];
+        };
+    });
 });
 
 
@@ -119,15 +122,15 @@ app.get('', (req, res) => {
 });
 
 app.get('/teacher', (req, res) => {
-    res.sendFile(path.join(__dirname, '/teacher.html'));
+    res.sendFile(path.join(__dirname, 'src/teacher/teacher.html'));
 });
 
 app.get('/student', (req, res) => {
-    res.sendFile(path.join(__dirname, '/student.html'));
+    res.sendFile(path.join(__dirname, 'src/student/student.html'));
 });
 
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, '/admin.html'));
+    res.sendFile(path.join(__dirname, 'src/admin/admin.html'));
 });
 
 app.get('*', (req, res) => {

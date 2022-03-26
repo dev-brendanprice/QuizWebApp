@@ -1,0 +1,103 @@
+<head>
+    <title>Socket.io Boilerplate</title>
+</head>
+
+<body>
+    <div id="mainContainer">
+        <div id="userAuth">
+
+            <form id="inputForm" onkeydown="ret_()">
+                Room Code: <input id="ac" onclick="retBool_(false)" type="text" name="roomCode" value=""><br>
+            </form>
+            <button id="enterBtn">Enter</button>
+        
+            <div id="enterStatus" style="display:none;"></div>
+            <div id="roomStatus">b ruh</div>
+        </div>
+        <div id="nameSelect" style="display:none;">
+            
+            Choose your nickname
+            <form id="inputForm2" onkeydown="ret_()">
+                nickname: <input id="nick" onclick="retBool_(false)" type="text" name="nickInput" value=""><br>
+            </form>
+            <button id="nickEnterBtn">Enter</button>
+        
+            <div id="nickSatus" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div id="quizContainer" stlye="display: none">
+        <div id="questionTitle"></div>
+    </div>
+
+    <div id="foo">Server Status: 🔴</div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+<script>
+    const log = console.log.bind(console),
+        socket = io('http://86.2.10.33:3221/');
+        
+    log("%cSocket.io Boilerplate", "color:blue; font-size:50px");
+
+    // Globals
+    var roomCode,
+        nickname;
+
+    socket.on('connect', () => {
+        document.getElementById('foo').innerHTML = 'Server Status: ✅';
+    });
+    socket.on('disconnect', () => {
+        document.getElementById('foo').innerHTML = 'Server Status: 🔴';
+    });
+    socket.on('roomConnect', () => {
+        document.getElementById('roomStatus').innerHTML = '';
+    });
+    socket.on('roomError', () => {
+        document.getElementById('roomStatus').innerHTML = 'That room does not exist, Please try again or fresh the browser..';
+    });
+
+    socket.on('roomEvent', (args) => {
+        document.getElementById('mainContainer').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'auto';
+        document.getElementById('questionTitle').innerHTML = args.questions[0];
+    });
+
+    document.getElementById('enterBtn').addEventListener('click', () => {
+
+        roomCode = document.getElementById('ac').value;
+        if (roomCode) {
+            document.getElementById('userAuth').style.display = 'none';
+            document.getElementById('nameSelect').style.display = 'inline-block';
+        } else if (!roomCode) {
+            document.getElementById('enterStatus').style.display = 'inline-block';
+            document.getElementById('enterStatus').innerHTML = 'Please enter a room code';
+        };
+    });
+
+    document.getElementById('nickEnterBtn').addEventListener('click', () => {
+
+        nickname = document.getElementById('nick').value;
+        if (nickname) {
+            var room = {
+                roomCode: roomCode
+            };
+            var user = {
+                userType: 'student'
+            };
+            socket.emit('roomListener', {room, user});
+            socket.emit('nickListener', {nickname});
+        } else if (!nickname) {
+            document.getElementById('nickSatus').style.display = 'inline-block';
+            document.getElementById('nickSatus').innerHTML = 'Please enter a nickname';
+        };
+    });
+
+    const ret_ = () => {
+        return event.key != 'Enter';
+    };
+
+    const retBool_ = (bool) => {
+        return bool;
+    };
+</script>

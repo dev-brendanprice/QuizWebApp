@@ -4,7 +4,7 @@
 
 <body>
     <div id="adminAuth">
-        <form id="frm1" action="" onkeydown="return event.key != 'Enter';">
+        <form id="frm1" action="" onkeydown="ret_()">
             pass: <input id="pswd" type="text" name="pswd" value=""><br>
         </form>
         <button id="btn">enter</button>
@@ -24,6 +24,13 @@
         if (document.getElementById('pswd').value == atob("YWRtaW4=")) {
             document.getElementById('adminAuth').style.display = 'none';
             document.getElementById('adminContent').style.display = 'inline-block';
-        };
+        }
+        else {
+            log('bruh')
+        }
     });
+
+    const ret_ = () => {
+        return event.key != 'Enter';
+    };
 </script>
